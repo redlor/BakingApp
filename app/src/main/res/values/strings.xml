@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Baking App</string>
+
+    <!-- Empty state -->
+    <string name="no_internet">No Internet connection</string>
+
+</resources>
