@@ -45,8 +45,22 @@ public class MainActivity extends AppCompatActivity implements RecipeClickCallba
 
         activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
-        recipesViewModel = ViewModelProviders.of(this, viewModelFactory)
-                .get(RecipesViewModel.class);
+        recipesViewModel = ViewModelProviders.of(this, viewModelFactory).get(RecipesViewModel.class);
+
+        if (internetAvailable()) {
+            setOnlineUI();
+
+        } else {
+            setOfflineUI();
+        }
+
+        recipesViewModel.getRecipes().observe(MainActivity.this, recipesList -> {
+            System.out.println(recipesList);
+            processResponse(recipesList);
+
+                }
+
+        );
     }
 
     private void processResponse(List<Recipe> recipeList) {

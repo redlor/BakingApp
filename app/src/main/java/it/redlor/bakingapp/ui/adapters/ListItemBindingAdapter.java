@@ -14,14 +14,18 @@ public class ListItemBindingAdapter {
     public static void loadImage(ImageView imageView, String imageUrl) {
         Uri uri = Uri.parse(imageUrl).buildUpon().build();
 
-        if (imageUrl == null) {
+        if (imageUrl == null | imageUrl.equals("")) {
             Picasso.with(imageView.getContext())
-                    .load(R.drawable.wifi)
+                    .load(R.drawable.potoffood)
                     .into(imageView);
         } else {
-            Picasso.with(imageView.getContext())
-                    .load(uri.toString())
-                    .into(imageView);
+            try {
+                Picasso.with(imageView.getContext())
+                        .load(uri.toString())
+                        .into(imageView);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }
