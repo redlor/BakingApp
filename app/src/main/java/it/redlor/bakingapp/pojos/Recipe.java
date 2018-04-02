@@ -1,15 +1,19 @@
 package it.redlor.bakingapp.pojos;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Recipe Object
  */
 
-public class Recipe {
+public class Recipe implements Parcelable {
 
     @SerializedName("id")
     @Expose
@@ -19,10 +23,10 @@ public class Recipe {
     private String name;
     @SerializedName("ingredients")
     @Expose
-    private List<Ingredient> ingredients = null;
+    private List<Ingredient> ingredients = new ArrayList<>();
     @SerializedName("steps")
     @Expose
-    private List<Step> steps = null;
+    private List<Step> steps = new ArrayList<>();
     @SerializedName("servings")
     @Expose
     private Integer servings;
@@ -78,4 +82,61 @@ public class Recipe {
         this.image = image;
     }
 
+    public Recipe() {}
+
+    public Recipe(int id, String name, List<Ingredient> ingredientList, List<Step> stepList, int servings, String image) {
+        this.id = id;
+        this.name = name;
+        this.ingredients = ingredientList;
+        this.steps = stepList;
+        this.servings = servings;
+        this.image = image;
+    }
+
+    private Recipe(Parcel in) {
+        id = in.readInt();
+        name = in.readString();
+        in.readTypedList(ingredients, Ingredient.CREATOR);
+        in.readTypedList(steps, Step.CREATOR);
+        servings = in.readInt();
+        image = in.readString();
+    }
+
+    public static final Parcelable.Creator<Recipe> CREATOR = new Parcelable.Creator<Recipe>() {
+
+        public Recipe createFromParcel(Parcel in) {
+            return new Recipe(in);
+        }
+
+        public Recipe[] newArray(int size) {
+            return new Recipe[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(id);
+        parcel.writeString(name);
+        parcel.writeTypedList(ingredients);
+        parcel.writeTypedList(steps);
+        parcel.writeInt(servings);
+        parcel.writeString(image);
+    }
+
+    @Override
+    public String toString() {
+        return "Recipe{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", ingredients='" + ingredients +'\'' +
+                ", steps='" + steps + '\'' +
+                ", servings='" + servings + '\'' +
+                ", image=" + image + '\'' +
+                '}';
+    }
 }

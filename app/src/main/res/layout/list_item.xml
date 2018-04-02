@@ -21,6 +21,7 @@
             android:layout_marginLeft="@dimen/side_margin_card"
             android:layout_marginRight="@dimen/cornerRadius"
             android:layout_marginTop="@dimen/card_margin"
+            android:elevation="@dimen/cardview_default_elevation"
             android:clickable="true"
             android:focusable="true"
             android:foreground="?android:attr/selectableItemBackground"

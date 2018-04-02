@@ -1,5 +1,8 @@
 package it.redlor.bakingapp.pojos;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -7,7 +10,7 @@ import com.google.gson.annotations.SerializedName;
  * Step Object
  */
 
-public class Step {
+public class Step implements Parcelable{
 
     @SerializedName("id")
     @Expose
@@ -65,4 +68,47 @@ public class Step {
         this.thumbnailURL = thumbnailURL;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(id);
+        parcel.writeString(shortDescription);
+        parcel.writeString(description);
+        parcel.writeString(videoURL);
+        parcel.writeString(thumbnailURL);
+    }
+
+    private Step(Parcel in) {
+        id = in.readInt();
+        shortDescription = in.readString();
+        description = in.readString();
+        videoURL = in.readString();
+        thumbnailURL = in.readString();
+    }
+
+    public static final Parcelable.Creator<Step> CREATOR
+            = new Parcelable.Creator<Step>() {
+        public Step createFromParcel(Parcel in) {
+            return new Step(in);
+        }
+
+        public Step[] newArray(int size) {
+            return new Step[size];
+        }
+    };
+
+    @Override
+    public String toString() {
+        return "Steps:{" +
+                "id='" + id + '\'' +
+                ", shortDescription='" + shortDescription + '\'' +
+                ", description='" + description + '\'' +
+                ", videoUrl='" + videoURL + '\'' +
+                ", thumbnailUrl='" + thumbnailURL + '\'' +
+                '}';
+    }
 }

@@ -2,6 +2,7 @@ package it.redlor.bakingapp.ui;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -27,6 +28,8 @@ import it.redlor.bakingapp.viewmodels.RecipesViewModel;
 import it.redlor.bakingapp.viewmodels.ViewModelFactory;
 
 public class MainActivity extends AppCompatActivity implements RecipeClickCallback, HasSupportFragmentInjector  {
+
+    private static final String CLICKED_RECIPE = "clicked_recipe";
 
     RecipeRecyclerAdapter recipeRecyclerAdapter;
     private LinearLayoutManager linearLayoutManager;
@@ -101,6 +104,8 @@ public class MainActivity extends AppCompatActivity implements RecipeClickCallba
 
     @Override
     public void onClick(Recipe recipe) {
-
+        Intent intent = new Intent(this, DetailsActivity.class);
+        intent.putExtra(CLICKED_RECIPE, recipe);
+        startActivity(intent);
     }
 }

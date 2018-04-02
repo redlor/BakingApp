@@ -16,4 +16,5 @@
     <dimen name="padding">10dp</dimen>
     <dimen name="divider_height">5dp</dimen>
     <dimen name="text_size">18sp</dimen>
+    <dimen name="text_size_small">14sp</dimen>
 </resources>

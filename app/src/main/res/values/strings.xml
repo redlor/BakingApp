@@ -4,4 +4,7 @@
     <!-- Empty state -->
     <string name="no_internet">No Internet connection</string>
 
+    <!-- DetailsActivity -->
+    <string name="ingredients">Ingredients:</string>
+
 </resources>
