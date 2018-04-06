@@ -4,6 +4,7 @@ import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
 import it.redlor.bakingapp.ui.DetailsActivity;
 import it.redlor.bakingapp.ui.MainActivity;
+import it.redlor.bakingapp.ui.StepActivity;
 
 /**
  * Module for the activities
@@ -17,4 +18,7 @@ public abstract class ActivityModule {
 
     @ContributesAndroidInjector
     abstract DetailsActivity bindDetailsActivity();
+
+    @ContributesAndroidInjector
+    abstract StepActivity bindStepActivity();
 }

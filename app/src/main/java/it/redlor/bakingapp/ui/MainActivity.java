@@ -27,9 +27,10 @@ import it.redlor.bakingapp.ui.callbacks.RecipeClickCallback;
 import it.redlor.bakingapp.viewmodels.RecipesViewModel;
 import it.redlor.bakingapp.viewmodels.ViewModelFactory;
 
+import static it.redlor.bakingapp.utils.Constants.CLICKED_RECIPE;
+
 public class MainActivity extends AppCompatActivity implements RecipeClickCallback, HasSupportFragmentInjector  {
 
-    private static final String CLICKED_RECIPE = "clicked_recipe";
 
     RecipeRecyclerAdapter recipeRecyclerAdapter;
     private LinearLayoutManager linearLayoutManager;

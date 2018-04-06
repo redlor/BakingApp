@@ -17,7 +17,7 @@ public class DetailsViewModel extends ViewModel {
 
     MutableLiveData<Recipe> recipe;
     List<Ingredient> ingredientsList;
-    List<Step> stepsList;
+    ArrayList<Step> stepsList;
     StringBuilder stringBuilder;
 
     private Application application;
@@ -57,7 +57,7 @@ public class DetailsViewModel extends ViewModel {
         return stringBuilder;
     }
 
-    public List<Step> getSteps() {
+    public ArrayList<Step> getSteps() {
         stepsList = recipe.getValue().getSteps();
         return stepsList;
     }

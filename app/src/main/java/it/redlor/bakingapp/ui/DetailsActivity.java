@@ -6,9 +6,9 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -28,15 +28,20 @@ import it.redlor.bakingapp.utils.SimpleDividerItemDecoration;
 import it.redlor.bakingapp.viewmodels.DetailsViewModel;
 import it.redlor.bakingapp.viewmodels.ViewModelFactory;
 
-public class DetailsActivity extends AppCompatActivity implements StepClickCallback, HasSupportFragmentInjector {
+import static it.redlor.bakingapp.utils.Constants.CLICKED_RECIPE;
+import static it.redlor.bakingapp.utils.Constants.CLICKED_STEP;
+import static it.redlor.bakingapp.utils.Constants.STEP_LIST;
 
-    private static final String CLICKED_RECIPE = "clicked_recipe";
+public class DetailsActivity extends AppCompatActivity implements StepClickCallback, HasSupportFragmentInjector {
 
     ActivityDetailsBinding activityDetailsBinding;
     DetailsViewModel detailsViewModel;
 
     private LinearLayoutManager linearLayoutManager;
     private StepsAdapter stepsAdapter;
+
+    // Declare a variable to check if in Dual Pane mode
+    public static boolean mTwoPane;
 
     @Inject
     ViewModelFactory viewModelFactory;
@@ -50,6 +55,11 @@ public class DetailsActivity extends AppCompatActivity implements StepClickCallb
 
         // Set the layout
         activityDetailsBinding = DataBindingUtil.setContentView(this, R.layout.activity_details);
+
+        // Check if on a tablet
+        if (activityDetailsBinding.stepsLinearLayout != null) {
+            mTwoPane = true;
+        }
 
         // Initialize the ViewModel
         detailsViewModel = ViewModelProviders.of(this, viewModelFactory).get(DetailsViewModel.class);
@@ -79,7 +89,24 @@ public class DetailsActivity extends AppCompatActivity implements StepClickCallb
 
     @Override
     public void onClick(Step step) {
-        Toast.makeText(this, "Working", Toast.LENGTH_SHORT).show();
+
+        if (mTwoPane) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            StepFragment stepFragment = new StepFragment();
+            Bundle bundle = new Bundle();
+            bundle.putParcelableArrayList(STEP_LIST , detailsViewModel.getSteps());
+            bundle.putParcelable(CLICKED_STEP, step);
+            stepFragment.setArguments(bundle);
+
+            fragmentManager.beginTransaction()
+                    .replace(R.id.step_container, stepFragment)
+                    .commit();
+        } else {
+            Intent intent = new Intent(this, StepActivity.class);
+            intent.putExtra(CLICKED_STEP, step);
+            intent.putExtra(STEP_LIST, detailsViewModel.getSteps());
+            startActivity(intent);
+        }
     }
 
     @Override

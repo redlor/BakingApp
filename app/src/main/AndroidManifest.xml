@@ -23,8 +23,12 @@
 
         <activity android:name=".ui.DetailsActivity"
             android:parentActivityName=".ui.MainActivity">
-
         </activity>
+
+        <activity android:name=".ui.StepActivity"
+            android:parentActivityName=".ui.DetailsActivity">
+        </activity>
+
     </application>
 
 </manifest>

@@ -9,9 +9,14 @@
             type="it.redlor.bakingapp.viewmodels.DetailsViewModel"/>
     </data>
 
-
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
@@ -53,4 +58,31 @@
             android:layout_height="wrap_content"/>
 
     </LinearLayout>
+
+    <!-- A small divider -->
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@android:color/darker_gray" />
+
+        <LinearLayout
+            android:id="@+id/steps_linear_layout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:id="@+id/details_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerInside">
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
 </layout>
