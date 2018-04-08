@@ -1,6 +1,8 @@
 package it.redlor.bakingapp.ui;
 
+import android.appwidget.AppWidgetManager;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -24,6 +26,7 @@ import it.redlor.bakingapp.databinding.ActivityMainBinding;
 import it.redlor.bakingapp.pojos.Recipe;
 import it.redlor.bakingapp.ui.adapters.RecipeRecyclerAdapter;
 import it.redlor.bakingapp.ui.callbacks.RecipeClickCallback;
+import it.redlor.bakingapp.ui.widget.BakingAppWidgetProvider;
 import it.redlor.bakingapp.viewmodels.RecipesViewModel;
 import it.redlor.bakingapp.viewmodels.ViewModelFactory;
 
@@ -59,7 +62,6 @@ public class MainActivity extends AppCompatActivity implements RecipeClickCallba
         }
 
         recipesViewModel.getRecipes().observe(MainActivity.this, recipesList -> {
-            System.out.println(recipesList);
             processResponse(recipesList);
 
                 }
@@ -107,6 +109,14 @@ public class MainActivity extends AppCompatActivity implements RecipeClickCallba
     public void onClick(Recipe recipe) {
         Intent intent = new Intent(this, DetailsActivity.class);
         intent.putExtra(CLICKED_RECIPE, recipe);
+       Intent widget = new Intent(this, BakingAppWidgetProvider.class);
+       widget.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        int[] ids = AppWidgetManager.getInstance(getApplication())
+                .getAppWidgetIds(new ComponentName(getApplication(), BakingAppWidgetProvider.class));
+        widget.putExtra(CLICKED_RECIPE, recipe);
+        widget.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+        sendBroadcast(widget);
+
         startActivity(intent);
     }
 }

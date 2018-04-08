@@ -5,7 +5,6 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -16,7 +15,7 @@ import it.redlor.bakingapp.pojos.Step;
 public class DetailsViewModel extends ViewModel {
 
     MutableLiveData<Recipe> recipe;
-    List<Ingredient> ingredientsList;
+    ArrayList<Ingredient> ingredientsList;
     ArrayList<Step> stepsList;
     StringBuilder stringBuilder;
 
@@ -40,7 +39,11 @@ public class DetailsViewModel extends ViewModel {
 
     public StringBuilder getIngredients() {
         stringBuilder = new StringBuilder();
-        ingredientsList = recipe.getValue().getIngredients();
+        try {
+            ingredientsList = recipe.getValue().getIngredients();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
         for (Ingredient ingredient : ingredientsList) {
             float quantity = ingredient.getQuantity();
             String measure = ingredient.getMeasure();
@@ -58,7 +61,11 @@ public class DetailsViewModel extends ViewModel {
     }
 
     public ArrayList<Step> getSteps() {
-        stepsList = recipe.getValue().getSteps();
+        try {
+            stepsList = recipe.getValue().getSteps();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
         return stepsList;
     }
 }

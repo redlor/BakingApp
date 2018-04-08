@@ -22,6 +22,7 @@ public class Ingredient implements Parcelable {
     @Expose
     private String ingredient;
 
+
     public float getQuantity() {
         return quantity;
     }
