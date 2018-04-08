@@ -34,6 +34,7 @@ import com.squareup.picasso.Picasso;
 
 import it.redlor.bakingapp.R;
 import it.redlor.bakingapp.databinding.FragmentSinglestepBinding;
+import it.redlor.bakingapp.utils.ConnectivityUtils;
 
 import static it.redlor.bakingapp.utils.Constants.DESCRIPTION;
 import static it.redlor.bakingapp.utils.Constants.IMAGE_URL;
@@ -74,24 +75,26 @@ public class SingleStepFragment extends Fragment implements ExoPlayer.EventListe
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        String description = getArguments().getString(DESCRIPTION);
-        String videoUrl = getArguments().getString(VIDEO_URL);
-        String imageUrl = getArguments().getString(IMAGE_URL);
+        if (ConnectivityUtils.internetAvailable(getContext())) {
+            setOnlineUI();
+            String description = getArguments().getString(DESCRIPTION);
+            String videoUrl = getArguments().getString(VIDEO_URL);
+            String imageUrl = getArguments().getString(IMAGE_URL);
 
-        if (description != null && !description.isEmpty()) {
-            fragmentSimpleStepBinding.stepDescription.setText(description);
-        }
-        if (imageUrl != null && !imageUrl.isEmpty()) {
-            Picasso.with(fragmentSimpleStepBinding.stepImage.getContext())
-                    .load(imageUrl)
-                    .into(fragmentSimpleStepBinding.stepImage);
-            fragmentSimpleStepBinding.stepImage.setVisibility(View.VISIBLE);
-        } else {
-            fragmentSimpleStepBinding.stepImage.setVisibility(View.GONE);
-        }
+            if (description != null && !description.isEmpty()) {
+                fragmentSimpleStepBinding.stepDescription.setText(description);
+            }
+            if (imageUrl != null && !imageUrl.isEmpty()) {
+                Picasso.with(fragmentSimpleStepBinding.stepImage.getContext())
+                        .load(imageUrl)
+                        .into(fragmentSimpleStepBinding.stepImage);
+                fragmentSimpleStepBinding.stepImage.setVisibility(View.VISIBLE);
+            } else {
+                fragmentSimpleStepBinding.stepImage.setVisibility(View.GONE);
+            }
 
-        int orientation = getResources().getConfiguration().orientation;
-        if (videoUrl != null && !videoUrl.isEmpty()) {
+            int orientation = getResources().getConfiguration().orientation;
+            if (videoUrl != null && !videoUrl.isEmpty()) {
 
 
                 fragmentSimpleStepBinding.stepVideo.setVisibility(View.VISIBLE);
@@ -103,12 +106,30 @@ public class SingleStepFragment extends Fragment implements ExoPlayer.EventListe
                     fragmentSimpleStepBinding.stepDescriptionCard.setVisibility(View.GONE);
                     hideSystemUI();
                 }
-
+            } else {
+                fragmentSimpleStepBinding.stepVideo.setVisibility(View.GONE);
+            }
         } else {
-            fragmentSimpleStepBinding.stepVideo.setVisibility(View.GONE);
+            setOfflineUI();
         }
-
     }
+
+    private void setOnlineUI() {
+        fragmentSimpleStepBinding.stepVideo.setVisibility(View.VISIBLE);
+        fragmentSimpleStepBinding.stepDescription.setVisibility(View.VISIBLE);
+        fragmentSimpleStepBinding.stepImage.setVisibility(View.VISIBLE);
+        fragmentSimpleStepBinding.noInternetImage.setVisibility(View.GONE);
+        fragmentSimpleStepBinding.noInternetText.setVisibility(View.GONE);
+    }
+
+    private void setOfflineUI() {
+        fragmentSimpleStepBinding.stepVideo.setVisibility(View.GONE);
+        fragmentSimpleStepBinding.stepDescription.setVisibility(View.GONE);
+        fragmentSimpleStepBinding.stepImage.setVisibility(View.GONE);
+        fragmentSimpleStepBinding.noInternetImage.setVisibility(View.VISIBLE);
+        fragmentSimpleStepBinding.noInternetText.setVisibility(View.VISIBLE);
+    }
+
 
     @Override
     public void onPause() {

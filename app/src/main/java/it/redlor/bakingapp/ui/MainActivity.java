@@ -3,11 +3,8 @@ package it.redlor.bakingapp.ui;
 import android.appwidget.AppWidgetManager;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +24,7 @@ import it.redlor.bakingapp.pojos.Recipe;
 import it.redlor.bakingapp.ui.adapters.RecipeRecyclerAdapter;
 import it.redlor.bakingapp.ui.callbacks.RecipeClickCallback;
 import it.redlor.bakingapp.ui.widget.BakingAppWidgetProvider;
+import it.redlor.bakingapp.utils.ConnectivityUtils;
 import it.redlor.bakingapp.viewmodels.RecipesViewModel;
 import it.redlor.bakingapp.viewmodels.ViewModelFactory;
 
@@ -46,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements RecipeClickCallba
     @Inject
     ViewModelFactory viewModelFactory;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,19 +53,19 @@ public class MainActivity extends AppCompatActivity implements RecipeClickCallba
 
         recipesViewModel = ViewModelProviders.of(this, viewModelFactory).get(RecipesViewModel.class);
 
-        if (internetAvailable()) {
+
+        if (ConnectivityUtils.internetAvailable(this)) {
             setOnlineUI();
+            recipesViewModel.getRecipes().observe(MainActivity.this, recipesList -> {
+                        processResponse(recipesList);
+                    }
+            );
 
         } else {
             setOfflineUI();
         }
 
-        recipesViewModel.getRecipes().observe(MainActivity.this, recipesList -> {
-            processResponse(recipesList);
 
-                }
-
-        );
     }
 
     private void processResponse(List<Recipe> recipeList) {
@@ -88,17 +87,6 @@ public class MainActivity extends AppCompatActivity implements RecipeClickCallba
         activityMainBinding.noInternetText.setVisibility(View.VISIBLE);
     }
 
-    public boolean internetAvailable() {
-        // Get a reference to the ConnectivityManager to check state of network connectivity
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        // Get details on the currently active default data network
-        NetworkInfo networkInfo = null;
-        if (connectivityManager != null) {
-            networkInfo = connectivityManager.getActiveNetworkInfo();
-        }
-        return networkInfo != null && networkInfo.isConnectedOrConnecting();
-    }
 
     @Override
     public AndroidInjector<Fragment> supportFragmentInjector() {
