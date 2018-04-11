@@ -30,6 +30,7 @@ import it.redlor.bakingapp.viewmodels.ViewModelFactory;
 
 import static it.redlor.bakingapp.utils.Constants.CLICKED_RECIPE;
 import static it.redlor.bakingapp.utils.Constants.CLICKED_STEP;
+import static it.redlor.bakingapp.utils.Constants.STEP_ID;
 import static it.redlor.bakingapp.utils.Constants.STEP_LIST;
 
 public class DetailsActivity extends AppCompatActivity implements StepClickCallback, HasSupportFragmentInjector {
@@ -76,6 +77,9 @@ public class DetailsActivity extends AppCompatActivity implements StepClickCallb
         // Set Steps RecyclerView
         setSteps(detailsViewModel.getSteps());
 
+        // Set title
+        setTitle(recipe.getName());
+
     }
 
     private void setSteps(List<Step> list) {
@@ -96,6 +100,7 @@ public class DetailsActivity extends AppCompatActivity implements StepClickCallb
             Bundle bundle = new Bundle();
             bundle.putParcelableArrayList(STEP_LIST , detailsViewModel.getSteps());
             bundle.putParcelable(CLICKED_STEP, step);
+            bundle.putInt(STEP_ID, step.getId());
             stepFragment.setArguments(bundle);
 
             fragmentManager.beginTransaction()

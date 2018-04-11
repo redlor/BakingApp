@@ -20,6 +20,7 @@ import it.redlor.bakingapp.pojos.Step;
 import it.redlor.bakingapp.ui.adapters.StepPagerAdapter;
 import it.redlor.bakingapp.viewmodels.ViewModelFactory;
 
+import static it.redlor.bakingapp.ui.DetailsActivity.mTwoPane;
 import static it.redlor.bakingapp.utils.Constants.STEP_ID;
 import static it.redlor.bakingapp.utils.Constants.STEP_LIST;
 
@@ -56,7 +57,7 @@ public class StepFragment extends android.support.v4.app.Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         int orientation = getResources().getConfiguration().orientation;
-        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE && !mTwoPane) {
             fragmentStepBinding.stepTabLayout.setVisibility(View.GONE);
         }
         Bundle bundle = new Bundle();
@@ -66,9 +67,7 @@ public class StepFragment extends android.support.v4.app.Fragment {
             stepId = savedInstanceState.getInt(STEP_ID);
             fragmentStepBinding.stepViewPager.setCurrentItem(stepId);
         } else {
-
             stepId = bundle.getInt(STEP_ID);
-
         }
         steps = bundle.getParcelableArrayList(STEP_LIST);
             stepPagerAdapter = new StepPagerAdapter(getActivity().getSupportFragmentManager(),

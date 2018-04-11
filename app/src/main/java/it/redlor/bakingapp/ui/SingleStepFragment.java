@@ -27,7 +27,7 @@ import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
-import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
+import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.squareup.picasso.Picasso;
@@ -36,6 +36,7 @@ import it.redlor.bakingapp.R;
 import it.redlor.bakingapp.databinding.FragmentSinglestepBinding;
 import it.redlor.bakingapp.utils.ConnectivityUtils;
 
+import static it.redlor.bakingapp.ui.DetailsActivity.mTwoPane;
 import static it.redlor.bakingapp.utils.Constants.DESCRIPTION;
 import static it.redlor.bakingapp.utils.Constants.IMAGE_URL;
 import static it.redlor.bakingapp.utils.Constants.VIDEO_URL;
@@ -101,7 +102,7 @@ public class SingleStepFragment extends Fragment implements ExoPlayer.EventListe
                 initializeVideo();
                 initializePlayer(Uri.parse(videoUrl));
 
-                if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                if (orientation == Configuration.ORIENTATION_LANDSCAPE && !mTwoPane) {
                     expandVideoView(fragmentSimpleStepBinding.stepVideo);
                     fragmentSimpleStepBinding.stepDescriptionCard.setVisibility(View.GONE);
                     hideSystemUI();
@@ -150,7 +151,7 @@ public class SingleStepFragment extends Fragment implements ExoPlayer.EventListe
     }
 
 
-    private void expandVideoView(SimpleExoPlayerView exoPlayer) {
+    private void expandVideoView(PlayerView exoPlayer) {
         exoPlayer.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
         exoPlayer.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
     }
