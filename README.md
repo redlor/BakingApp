@@ -17,3 +17,7 @@ I use Architecture components to create the app:
 - ViewModel
 - Data Binding
 - RxJava with Retrofit 2
+
+## Screenshots
+<img src="./Screenshots/baking_app_phone_1.png" alt="Drawing" width="200px"/> <img src="./Screenshots/baking_app_phone_2.png" alt="Drawing" width="200px"/> <img src="./Screenshots/baking_app_phone_3.png" alt="Drawing" width="200px"/> 
+<img src="./Screenshots/baking_app_tablet.png" alt="Drawing" width="400px"/> <img src="./Screenshots/movies2tablet2.png" alt="Drawing" width="400px"/>
