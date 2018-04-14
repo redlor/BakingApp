@@ -10,5 +10,7 @@ public class Constants {
     public static final String VIDEO_URL = "video_url";
     public static final String IMAGE_URL = "image_url";
     public static final String VIDEO = "video";
+    public static final String SAVED_PLAYER_STATE = "playerState";
+    public static final String SAVED_PLAYER_POSITION = "playerPosition";
 
 }

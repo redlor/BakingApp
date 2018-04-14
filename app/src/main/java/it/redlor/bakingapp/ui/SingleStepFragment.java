@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +39,8 @@ import it.redlor.bakingapp.utils.ConnectivityUtils;
 import static it.redlor.bakingapp.ui.DetailsActivity.mTwoPane;
 import static it.redlor.bakingapp.utils.Constants.DESCRIPTION;
 import static it.redlor.bakingapp.utils.Constants.IMAGE_URL;
+import static it.redlor.bakingapp.utils.Constants.SAVED_PLAYER_POSITION;
+import static it.redlor.bakingapp.utils.Constants.SAVED_PLAYER_STATE;
 import static it.redlor.bakingapp.utils.Constants.VIDEO;
 import static it.redlor.bakingapp.utils.Constants.VIDEO_URL;
 
@@ -53,6 +56,8 @@ public class SingleStepFragment extends Fragment implements Player.EventListener
     String videoUrl;
     private MediaSessionCompat mediaSession;
     private PlaybackStateCompat.Builder stateBuilder;
+    long playerPosition;
+    boolean playState;
 
     public SingleStepFragment() {
     }
@@ -79,6 +84,11 @@ public class SingleStepFragment extends Fragment implements Player.EventListener
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        if (savedInstanceState != null) {
+            playerPosition = savedInstanceState.getLong(SAVED_PLAYER_POSITION);
+            playState = savedInstanceState.getBoolean(SAVED_PLAYER_STATE);
+        }
+
         if (ConnectivityUtils.internetAvailable(getContext())) {
             setOnlineUI();
             String description = getArguments().getString(DESCRIPTION);
@@ -88,23 +98,20 @@ public class SingleStepFragment extends Fragment implements Player.EventListener
             int orientation = getResources().getConfiguration().orientation;
 
             // Check JSON results
-            if (description != null && !description.isEmpty()) {
+            if (description != null && !TextUtils.isEmpty(description)) {
                 fragmentSimpleStepBinding.stepDescription.setText(description);
             }
 
-            if (imageUrl != null && !imageUrl.isEmpty()) {
+            if (imageUrl != null && !TextUtils.isEmpty(imageUrl)) {
                 Picasso.with(fragmentSimpleStepBinding.stepImage.getContext())
                         .load(imageUrl)
                         .into(fragmentSimpleStepBinding.stepImage);
                 fragmentSimpleStepBinding.stepImage.setVisibility(View.VISIBLE);
-                if (imageUrl.contains(".mp4")) {
-                    videoUrl = imageUrl;
-                }
             } else {
                 fragmentSimpleStepBinding.stepImage.setVisibility(View.GONE);
             }
 
-            if (videoUrl != null && !videoUrl.isEmpty()) {
+            if (videoUrl != null && !TextUtils.isEmpty(videoUrl)) {
 
                 fragmentSimpleStepBinding.stepVideo.setVisibility(View.VISIBLE);
                 initializeVideo();
@@ -145,6 +152,14 @@ public class SingleStepFragment extends Fragment implements Player.EventListener
     public void onPause() {
         super.onPause();
         releaseVideoPlayer();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (videoUrl != null) {
+            initializePlayer(Uri.parse(videoUrl));
+        }
     }
 
     private void hideSystemUI() {
@@ -206,13 +221,17 @@ public class SingleStepFragment extends Fragment implements Player.EventListener
             String agent = Util.getUserAgent(getContext(), VIDEO);
             MediaSource mediaSource = new ExtractorMediaSource(mediaUri, new DefaultDataSourceFactory(
                     getContext(), agent), new DefaultExtractorsFactory(), null, null);
+
             simpleExoPlayer.prepare(mediaSource);
-            simpleExoPlayer.setPlayWhenReady(true);
+            simpleExoPlayer.setPlayWhenReady(playState);
+            simpleExoPlayer.seekTo(playerPosition);
         }
     }
 
     private void releaseVideoPlayer() {
         if (simpleExoPlayer != null) {
+            playerPosition = simpleExoPlayer.getCurrentPosition();
+            playState = simpleExoPlayer.getPlayWhenReady();
             simpleExoPlayer.stop();
             simpleExoPlayer.release();
             simpleExoPlayer = null;
@@ -245,7 +264,9 @@ public class SingleStepFragment extends Fragment implements Player.EventListener
         } else if ((playbackState == Player.STATE_READY)) {
             stateBuilder.setState(PlaybackStateCompat.STATE_PAUSED, simpleExoPlayer.getCurrentPosition(), 1f);
         }
-        mediaSession.setPlaybackState(stateBuilder.build());
+        if(stateBuilder != null) {
+            mediaSession.setPlaybackState(stateBuilder.build());
+        }
     }
 
     @Override
@@ -275,6 +296,14 @@ public class SingleStepFragment extends Fragment implements Player.EventListener
 
     @Override
     public void onSeekProcessed() {
+
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong(SAVED_PLAYER_POSITION, playerPosition);
+        outState.putBoolean(SAVED_PLAYER_STATE, playState);
 
     }
 }
