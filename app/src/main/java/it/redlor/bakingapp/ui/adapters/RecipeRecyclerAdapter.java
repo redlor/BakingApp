@@ -16,6 +16,11 @@ import it.redlor.bakingapp.pojos.Recipe;
 import it.redlor.bakingapp.ui.callbacks.RecipeClickCallback;
 import it.redlor.bakingapp.viewmodels.RecipesViewModel;
 
+/**
+ * RecyclerView Adapter for the list of recipes
+ */
+
+
 public class RecipeRecyclerAdapter extends RecyclerView.Adapter<RecipeRecyclerAdapter.RecipeViewHolder> {
 
     private RecipesViewModel recipesViewModel;
@@ -43,7 +48,7 @@ public class RecipeRecyclerAdapter extends RecyclerView.Adapter<RecipeRecyclerAd
 
     @Override
     public void onBindViewHolder(@NonNull RecipeViewHolder holder, int position) {
-            holder.bind(recipes.get(position), recipeClickCallback);
+        holder.bind(recipes.get(position), recipeClickCallback);
     }
 
     @Override

@@ -13,10 +13,14 @@ import it.redlor.bakingapp.R;
 import it.redlor.bakingapp.pojos.Step;
 import it.redlor.bakingapp.ui.SingleStepFragment;
 
+/**
+ * Pager Adapter for the ViewPage
+ */
+
 public class StepPagerAdapter extends FragmentPagerAdapter {
 
-    private List<Step> steps;
     private final String title;
+    private List<Step> steps;
 
     public StepPagerAdapter(FragmentManager fragmentManager, List<Step> steps, Context context) {
         super(fragmentManager);

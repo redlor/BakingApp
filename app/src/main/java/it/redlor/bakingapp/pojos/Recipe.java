@@ -14,6 +14,16 @@ import java.util.ArrayList;
 
 public class Recipe implements Parcelable {
 
+    public static final Parcelable.Creator<Recipe> CREATOR = new Parcelable.Creator<Recipe>() {
+
+        public Recipe createFromParcel(Parcel in) {
+            return new Recipe(in);
+        }
+
+        public Recipe[] newArray(int size) {
+            return new Recipe[size];
+        }
+    };
     @SerializedName("id")
     @Expose
     private Integer id;
@@ -32,6 +42,27 @@ public class Recipe implements Parcelable {
     @SerializedName("image")
     @Expose
     private String image;
+
+    public Recipe() {
+    }
+
+    public Recipe(int id, String name, ArrayList<Ingredient> ingredientList, ArrayList<Step> stepList, int servings, String image) {
+        this.id = id;
+        this.name = name;
+        this.ingredients = ingredientList;
+        this.steps = stepList;
+        this.servings = servings;
+        this.image = image;
+    }
+
+    private Recipe(Parcel in) {
+        id = in.readInt();
+        name = in.readString();
+        in.readTypedList(ingredients, Ingredient.CREATOR);
+        in.readTypedList(steps, Step.CREATOR);
+        servings = in.readInt();
+        image = in.readString();
+    }
 
     public Integer getId() {
         return id;
@@ -81,37 +112,6 @@ public class Recipe implements Parcelable {
         this.image = image;
     }
 
-    public Recipe() {}
-
-    public Recipe(int id, String name, ArrayList<Ingredient> ingredientList, ArrayList<Step> stepList, int servings, String image) {
-        this.id = id;
-        this.name = name;
-        this.ingredients = ingredientList;
-        this.steps = stepList;
-        this.servings = servings;
-        this.image = image;
-    }
-
-    private Recipe(Parcel in) {
-        id = in.readInt();
-        name = in.readString();
-        in.readTypedList(ingredients, Ingredient.CREATOR);
-        in.readTypedList(steps, Step.CREATOR);
-        servings = in.readInt();
-        image = in.readString();
-    }
-
-    public static final Parcelable.Creator<Recipe> CREATOR = new Parcelable.Creator<Recipe>() {
-
-        public Recipe createFromParcel(Parcel in) {
-            return new Recipe(in);
-        }
-
-        public Recipe[] newArray(int size) {
-            return new Recipe[size];
-        }
-    };
-
     @Override
     public int describeContents() {
         return 0;
@@ -132,7 +132,7 @@ public class Recipe implements Parcelable {
         return "Recipe{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
-                ", ingredients='" + ingredients +'\'' +
+                ", ingredients='" + ingredients + '\'' +
                 ", steps='" + steps + '\'' +
                 ", servings='" + servings + '\'' +
                 ", image=" + image + '\'' +

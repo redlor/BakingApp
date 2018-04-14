@@ -29,6 +29,7 @@ public class BakingAppWidgetProvider extends AppWidgetProvider {
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.baking_app_widget);
 
+        // populate the widget's TextViews
             if (recipe != null) {
                 views.setTextViewText(R.id.widget_title_text_view, recipe.getName());
                 views.setTextViewText(R.id.widget_ingredients_text_view, getIngredients(recipe));
@@ -52,6 +53,7 @@ public class BakingAppWidgetProvider extends AppWidgetProvider {
         }
     }
 
+    // Receive the last clicked recipe
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent != null) {
@@ -75,6 +77,7 @@ public class BakingAppWidgetProvider extends AppWidgetProvider {
         // Enter relevant functionality for when the last widget is disabled
     }
 
+    // This method formats the list of ingredients
     public static StringBuilder getIngredients(Recipe recipe) {
         StringBuilder stringBuilder = new StringBuilder();
         ArrayList<Ingredient> ingredientsList = recipe.getIngredients();

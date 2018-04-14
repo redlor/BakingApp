@@ -5,6 +5,10 @@ import android.support.test.espresso.IdlingResource;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * For the test
+ */
+
 public class SimpleIdlingResource implements IdlingResource {
 
     @Nullable

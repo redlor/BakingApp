@@ -35,20 +35,16 @@ import static it.redlor.bakingapp.utils.Constants.STEP_LIST;
 
 public class DetailsActivity extends AppCompatActivity implements StepClickCallback, HasSupportFragmentInjector {
 
-    ActivityDetailsBinding activityDetailsBinding;
-    DetailsViewModel detailsViewModel;
-
-    private LinearLayoutManager linearLayoutManager;
-    private StepsAdapter stepsAdapter;
-
     // Declare a variable to check if in Dual Pane mode
     public static boolean mTwoPane;
-
+    ActivityDetailsBinding activityDetailsBinding;
+    DetailsViewModel detailsViewModel;
     @Inject
     ViewModelFactory viewModelFactory;
-
     @Inject
     DispatchingAndroidInjector<Fragment> fragmentDispatchingAndroidInjector;
+    private LinearLayoutManager linearLayoutManager;
+    private StepsAdapter stepsAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,7 +62,7 @@ public class DetailsActivity extends AppCompatActivity implements StepClickCallb
         detailsViewModel = ViewModelProviders.of(this, viewModelFactory).get(DetailsViewModel.class);
 
         // Get the clicked Recipe
-        Intent intent =  getIntent();
+        Intent intent = getIntent();
         Recipe recipe = intent.getParcelableExtra(CLICKED_RECIPE);
 
         // Set the clicked recipe in the ViewModel
@@ -82,11 +78,12 @@ public class DetailsActivity extends AppCompatActivity implements StepClickCallb
 
     }
 
+    // Steps RecyclerView
     private void setSteps(List<Step> list) {
         linearLayoutManager = new LinearLayoutManager(this);
         activityDetailsBinding.stepsRv.setLayoutManager(linearLayoutManager);
         activityDetailsBinding.stepsRv.addItemDecoration(new SimpleDividerItemDecoration(this));
-        stepsAdapter =  new StepsAdapter(list, this);
+        stepsAdapter = new StepsAdapter(list, this);
         activityDetailsBinding.stepsRv.setAdapter(stepsAdapter);
     }
 
@@ -94,11 +91,12 @@ public class DetailsActivity extends AppCompatActivity implements StepClickCallb
     @Override
     public void onClick(Step step) {
 
+        // If on tablet add the fragment
         if (mTwoPane) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             StepFragment stepFragment = new StepFragment();
             Bundle bundle = new Bundle();
-            bundle.putParcelableArrayList(STEP_LIST , detailsViewModel.getSteps());
+            bundle.putParcelableArrayList(STEP_LIST, detailsViewModel.getSteps());
             bundle.putParcelable(CLICKED_STEP, step);
             bundle.putInt(STEP_ID, step.getId());
             stepFragment.setArguments(bundle);
@@ -106,6 +104,7 @@ public class DetailsActivity extends AppCompatActivity implements StepClickCallb
             fragmentManager.beginTransaction()
                     .replace(R.id.step_container, stepFragment)
                     .commit();
+            // if not on tablet, launch a new activity
         } else {
             Intent intent = new Intent(this, StepActivity.class);
             intent.putExtra(CLICKED_STEP, step);
@@ -118,4 +117,6 @@ public class DetailsActivity extends AppCompatActivity implements StepClickCallb
     public AndroidInjector<Fragment> supportFragmentInjector() {
         return fragmentDispatchingAndroidInjector;
     }
+
+
 }

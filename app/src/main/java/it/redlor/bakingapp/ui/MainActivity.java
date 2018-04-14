@@ -35,20 +35,17 @@ import it.redlor.bakingapp.viewmodels.ViewModelFactory;
 
 import static it.redlor.bakingapp.utils.Constants.CLICKED_RECIPE;
 
-public class MainActivity extends AppCompatActivity implements RecipeClickCallback, HasSupportFragmentInjector  {
+public class MainActivity extends AppCompatActivity implements RecipeClickCallback, HasSupportFragmentInjector {
 
 
     RecipeRecyclerAdapter recipeRecyclerAdapter;
-    private LinearLayoutManager linearLayoutManager;
     RecipesViewModel recipesViewModel;
     ActivityMainBinding activityMainBinding;
-
     @Inject
     DispatchingAndroidInjector<Fragment> fragmentDispatchingAndroidInjector;
-
     @Inject
     ViewModelFactory viewModelFactory;
-
+    private LinearLayoutManager linearLayoutManager;
     @Nullable
     private SimpleIdlingResource mIdlingResource;
 
@@ -68,7 +65,6 @@ public class MainActivity extends AppCompatActivity implements RecipeClickCallba
         activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
         recipesViewModel = ViewModelProviders.of(this, viewModelFactory).get(RecipesViewModel.class);
-
 
         if (ConnectivityUtils.internetAvailable(this)) {
             setOnlineUI();
@@ -109,12 +105,13 @@ public class MainActivity extends AppCompatActivity implements RecipeClickCallba
         return fragmentDispatchingAndroidInjector;
     }
 
+    // Pass the reipe to the details activity and to the widget
     @Override
     public void onClick(Recipe recipe) {
         Intent intent = new Intent(this, DetailsActivity.class);
         intent.putExtra(CLICKED_RECIPE, recipe);
-       Intent widget = new Intent(this, BakingAppWidgetProvider.class);
-       widget.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        Intent widget = new Intent(this, BakingAppWidgetProvider.class);
+        widget.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
         int[] ids = AppWidgetManager.getInstance(getApplication())
                 .getAppWidgetIds(new ComponentName(getApplication(), BakingAppWidgetProvider.class));
         widget.putExtra(CLICKED_RECIPE, recipe);

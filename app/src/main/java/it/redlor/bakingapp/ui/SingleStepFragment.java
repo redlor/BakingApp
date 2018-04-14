@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.exoplayer2.ExoPlaybackException;
-import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
@@ -39,37 +38,41 @@ import it.redlor.bakingapp.utils.ConnectivityUtils;
 import static it.redlor.bakingapp.ui.DetailsActivity.mTwoPane;
 import static it.redlor.bakingapp.utils.Constants.DESCRIPTION;
 import static it.redlor.bakingapp.utils.Constants.IMAGE_URL;
+import static it.redlor.bakingapp.utils.Constants.VIDEO;
 import static it.redlor.bakingapp.utils.Constants.VIDEO_URL;
 
+/**
+ * Single Fragment class
+ */
 
-public class SingleStepFragment extends Fragment implements ExoPlayer.EventListener {
-
-
+public class SingleStepFragment extends Fragment implements Player.EventListener {
 
     FragmentSinglestepBinding fragmentSimpleStepBinding;
 
     SimpleExoPlayer simpleExoPlayer;
+    String videoUrl;
     private MediaSessionCompat mediaSession;
     private PlaybackStateCompat.Builder stateBuilder;
 
-    public SingleStepFragment() {}
+    public SingleStepFragment() {
+    }
 
-    public static  SingleStepFragment newInstance(String description, String videoUrl,
-                                            String imageUrl) {
+    public static SingleStepFragment newInstance(String description, String videoUrl,
+                                                 String imageUrl) {
         Bundle arguments = new Bundle();
         arguments.putString(DESCRIPTION, description);
         arguments.putString(VIDEO_URL, videoUrl);
         arguments.putString(IMAGE_URL, imageUrl);
         SingleStepFragment singleStepFragment = new SingleStepFragment();
         singleStepFragment.setArguments(arguments);
-        return  singleStepFragment;
+        return singleStepFragment;
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            fragmentSimpleStepBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_singlestep, container, false);
-            return fragmentSimpleStepBinding.getRoot();
+        fragmentSimpleStepBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_singlestep, container, false);
+        return fragmentSimpleStepBinding.getRoot();
     }
 
     @Override
@@ -79,29 +82,35 @@ public class SingleStepFragment extends Fragment implements ExoPlayer.EventListe
         if (ConnectivityUtils.internetAvailable(getContext())) {
             setOnlineUI();
             String description = getArguments().getString(DESCRIPTION);
-            String videoUrl = getArguments().getString(VIDEO_URL);
+            videoUrl = getArguments().getString(VIDEO_URL);
             String imageUrl = getArguments().getString(IMAGE_URL);
 
+            int orientation = getResources().getConfiguration().orientation;
+
+            // Check JSON results
             if (description != null && !description.isEmpty()) {
                 fragmentSimpleStepBinding.stepDescription.setText(description);
             }
+
             if (imageUrl != null && !imageUrl.isEmpty()) {
                 Picasso.with(fragmentSimpleStepBinding.stepImage.getContext())
                         .load(imageUrl)
                         .into(fragmentSimpleStepBinding.stepImage);
                 fragmentSimpleStepBinding.stepImage.setVisibility(View.VISIBLE);
+                if (imageUrl.contains(".mp4")) {
+                    videoUrl = imageUrl;
+                }
             } else {
                 fragmentSimpleStepBinding.stepImage.setVisibility(View.GONE);
             }
 
-            int orientation = getResources().getConfiguration().orientation;
             if (videoUrl != null && !videoUrl.isEmpty()) {
-
 
                 fragmentSimpleStepBinding.stepVideo.setVisibility(View.VISIBLE);
                 initializeVideo();
                 initializePlayer(Uri.parse(videoUrl));
 
+                // If on landscape and not on tablet take all the screen size
                 if (orientation == Configuration.ORIENTATION_LANDSCAPE && !mTwoPane) {
                     expandVideoView(fragmentSimpleStepBinding.stepVideo);
                     fragmentSimpleStepBinding.stepDescriptionCard.setVisibility(View.GONE);
@@ -139,8 +148,6 @@ public class SingleStepFragment extends Fragment implements ExoPlayer.EventListe
     }
 
     private void hideSystemUI() {
-
-
         getActivity().getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -160,12 +167,12 @@ public class SingleStepFragment extends Fragment implements ExoPlayer.EventListe
     private void initializeVideo() {
         mediaSession = new MediaSessionCompat(getContext(), SingleStepFragment.class.getSimpleName());
         mediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS |
-                              MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
+                MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
         mediaSession.setMediaButtonReceiver(null);
         stateBuilder = new PlaybackStateCompat.Builder().setActions(
                 PlaybackStateCompat.ACTION_PLAY |
-                PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS |
-                PlaybackStateCompat.ACTION_PLAY_PAUSE);
+                        PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS |
+                        PlaybackStateCompat.ACTION_PLAY_PAUSE);
 
         mediaSession.setPlaybackState(stateBuilder.build());
         mediaSession.setCallback(new MediaSessionCompat.Callback() {
@@ -196,7 +203,7 @@ public class SingleStepFragment extends Fragment implements ExoPlayer.EventListe
             fragmentSimpleStepBinding.stepVideo.setPlayer(simpleExoPlayer);
             simpleExoPlayer.addListener(this);
 
-            String agent = Util.getUserAgent(getContext(), "video");
+            String agent = Util.getUserAgent(getContext(), VIDEO);
             MediaSource mediaSource = new ExtractorMediaSource(mediaUri, new DefaultDataSourceFactory(
                     getContext(), agent), new DefaultExtractorsFactory(), null, null);
             simpleExoPlayer.prepare(mediaSource);
@@ -233,10 +240,10 @@ public class SingleStepFragment extends Fragment implements ExoPlayer.EventListe
 
     @Override
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-            if ((playbackState == Player.STATE_READY) && playWhenReady) {
-                stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING, simpleExoPlayer.getCurrentPosition(), 1f);
-            } else if ((playbackState == Player.STATE_READY)) {
-                stateBuilder.setState(PlaybackStateCompat.STATE_PAUSED, simpleExoPlayer.getCurrentPosition(), 1f);
+        if ((playbackState == Player.STATE_READY) && playWhenReady) {
+            stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING, simpleExoPlayer.getCurrentPosition(), 1f);
+        } else if ((playbackState == Player.STATE_READY)) {
+            stateBuilder.setState(PlaybackStateCompat.STATE_PAUSED, simpleExoPlayer.getCurrentPosition(), 1f);
         }
         mediaSession.setPlaybackState(stateBuilder.build());
     }

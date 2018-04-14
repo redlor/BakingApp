@@ -18,6 +18,10 @@ import io.reactivex.schedulers.Schedulers;
 import it.redlor.bakingapp.pojos.Recipe;
 import it.redlor.bakingapp.utils.RecipesApiInterface;
 
+/**
+ * ViewModel for the MainActivity
+ */
+
 public class RecipesViewModel extends ViewModel {
 
     private Application application;
@@ -38,13 +42,13 @@ public class RecipesViewModel extends ViewModel {
         this.recipesList = recipesList;
     }
 
-    public LiveData<ArrayList<Recipe>>getRecipes() {
+    public LiveData<ArrayList<Recipe>> getRecipes() {
         loadRecipes();
         return finalList;
     }
 
     private void loadRecipes() {
-        compositeDisposable.add((Disposable)recipesApiInterface.getRecipes()
+        compositeDisposable.add((Disposable) recipesApiInterface.getRecipes()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<Recipe>>() {
@@ -52,7 +56,7 @@ public class RecipesViewModel extends ViewModel {
                     public void accept(List<Recipe> recipeList) throws Exception {
                         recipesList.setValue(new ArrayList<>());
                         finalList.setValue(new ArrayList<>());
-                        for (int i=0; i< recipeList.size(); i++) {
+                        for (int i = 0; i < recipeList.size(); i++) {
                             Recipe recipe = recipeList.get(i);
                             finalList.getValue().add(recipe);
                         }

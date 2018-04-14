@@ -12,6 +12,9 @@ import it.redlor.bakingapp.pojos.Ingredient;
 import it.redlor.bakingapp.pojos.Recipe;
 import it.redlor.bakingapp.pojos.Step;
 
+/**
+ * ViewModel for the Details Activity
+ */
 public class DetailsViewModel extends ViewModel {
 
     MutableLiveData<Recipe> recipe;
@@ -25,8 +28,8 @@ public class DetailsViewModel extends ViewModel {
     public DetailsViewModel(Application application) {
         this.application = application;
         this.recipe = new MutableLiveData<>();
-        this.ingredientsList =  new ArrayList<>();
-        this.stepsList =  new ArrayList<>();
+        this.ingredientsList = new ArrayList<>();
+        this.stepsList = new ArrayList<>();
     }
 
     public Recipe getRecipe() {

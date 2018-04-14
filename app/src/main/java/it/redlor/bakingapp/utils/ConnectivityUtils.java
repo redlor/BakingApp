@@ -4,6 +4,10 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+/**
+ * Check Internet connection
+ */
+
 public class ConnectivityUtils {
 
     public static boolean internetAvailable(Context context) {

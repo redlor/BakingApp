@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 
 import java.util.ArrayList;
 
@@ -22,6 +23,9 @@ import static it.redlor.bakingapp.utils.Constants.CLICKED_STEP;
 import static it.redlor.bakingapp.utils.Constants.STEP_ID;
 import static it.redlor.bakingapp.utils.Constants.STEP_LIST;
 
+/**
+ * Activity with Step Fragment
+ */
 
 public class StepActivity extends AppCompatActivity implements HasSupportFragmentInjector {
 
@@ -34,7 +38,6 @@ public class StepActivity extends AppCompatActivity implements HasSupportFragmen
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activityStepBinding = DataBindingUtil.setContentView(this, R.layout.activity_step);
-
 
         if (savedInstanceState == null) {
             Intent intent = getIntent();
@@ -50,13 +53,29 @@ public class StepActivity extends AppCompatActivity implements HasSupportFragmen
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.step_container, stepFragment)
                     .commit();
+
         }
-
-
     }
 
     @Override
     public AndroidInjector<Fragment> supportFragmentInjector() {
         return fragmentDispatchingAndroidInjector;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }

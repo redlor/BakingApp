@@ -15,8 +15,12 @@
     <dimen name="card_margin">4dp</dimen>
     <dimen name="padding">10dp</dimen>
     <dimen name="divider_height">5dp</dimen>
+    <dimen name="text_size_big">22sp</dimen>
     <dimen name="text_size">18sp</dimen>
     <dimen name="text_size_small">14sp</dimen>
+    <dimen name="circle">36dp</dimen>
+
+    <dimen name="exo_player_height">200dp</dimen>
 
     <!--
 Refer to App Widget Documentation for margin information

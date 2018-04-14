@@ -12,6 +12,16 @@ import com.google.gson.annotations.SerializedName;
 
 public class Ingredient implements Parcelable {
 
+    public static final Parcelable.Creator<Ingredient> CREATOR =
+            new Parcelable.Creator<Ingredient>() {
+                public Ingredient createFromParcel(Parcel in) {
+                    return new Ingredient(in);
+                }
+
+                public Ingredient[] newArray(int size) {
+                    return new Ingredient[size];
+                }
+            };
     @SerializedName("quantity")
     @Expose
     private float quantity;
@@ -22,6 +32,11 @@ public class Ingredient implements Parcelable {
     @Expose
     private String ingredient;
 
+    private Ingredient(Parcel in) {
+        quantity = in.readFloat();
+        measure = in.readString();
+        ingredient = in.readString();
+    }
 
     public float getQuantity() {
         return quantity;
@@ -59,27 +74,10 @@ public class Ingredient implements Parcelable {
         parcel.writeString(ingredient);
     }
 
-    private Ingredient(Parcel in) {
-        quantity = in.readFloat();
-        measure = in.readString();
-        ingredient = in.readString();
-    }
-
-    public static final Parcelable.Creator<Ingredient> CREATOR =
-            new Parcelable.Creator<Ingredient>() {
-        public Ingredient createFromParcel(Parcel in) {
-            return new Ingredient(in);
-        }
-
-        public Ingredient[] newArray(int size) {
-            return new Ingredient[size];
-        }
-    };
-
     @Override
     public String toString() {
         return "Ingredients:{" +
-                "quantity='" +quantity +'\'' +
+                "quantity='" + quantity + '\'' +
                 ", measure='" + measure + '\'' +
                 ", ingredient'" + ingredient + '\'' +
                 '}';

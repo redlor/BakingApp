@@ -16,6 +16,7 @@ import javax.inject.Inject;
 
 import it.redlor.bakingapp.R;
 import it.redlor.bakingapp.databinding.FragmentStepBinding;
+import it.redlor.bakingapp.di.Injectable;
 import it.redlor.bakingapp.pojos.Step;
 import it.redlor.bakingapp.ui.adapters.StepPagerAdapter;
 import it.redlor.bakingapp.viewmodels.ViewModelFactory;
@@ -24,18 +25,21 @@ import static it.redlor.bakingapp.ui.DetailsActivity.mTwoPane;
 import static it.redlor.bakingapp.utils.Constants.STEP_ID;
 import static it.redlor.bakingapp.utils.Constants.STEP_LIST;
 
+/**
+ * Fragment with tab layout
+ */
 
-public class StepFragment extends android.support.v4.app.Fragment {
+public class StepFragment extends android.support.v4.app.Fragment implements Injectable {
 
     FragmentStepBinding fragmentStepBinding;
     int stepId;
-    private StepPagerAdapter stepPagerAdapter;
     ArrayList<Step> steps;
-
     @Inject
     ViewModelFactory viewModelFactory;
+    private StepPagerAdapter stepPagerAdapter;
 
-    public StepFragment() {}
+    public StepFragment() {
+    }
 
     public static StepFragment newInstance(int stepId) {
         Bundle arguments = new Bundle();
@@ -70,35 +74,49 @@ public class StepFragment extends android.support.v4.app.Fragment {
             stepId = bundle.getInt(STEP_ID);
         }
         steps = bundle.getParcelableArrayList(STEP_LIST);
-            stepPagerAdapter = new StepPagerAdapter(getActivity().getSupportFragmentManager(),
-                    new ArrayList<>(0), getContext());
-            stepPagerAdapter.setSteps(steps);
-            fragmentStepBinding.stepViewPager.setAdapter(stepPagerAdapter);
-            fragmentStepBinding.stepViewPager.setCurrentItem(stepId);
-            fragmentStepBinding.stepViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                @Override
-                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        stepPagerAdapter = new StepPagerAdapter(getActivity().getSupportFragmentManager(),
+                new ArrayList<>(0), getContext());
+        stepPagerAdapter.setSteps(steps);
+        fragmentStepBinding.stepViewPager.setAdapter(stepPagerAdapter);
+        fragmentStepBinding.stepViewPager.setCurrentItem(stepId);
+        fragmentStepBinding.stepViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-                }
+            }
 
-                @Override
-                public void onPageSelected(int position) {
-                    stepId = position;
-                }
+            @Override
+            public void onPageSelected(int position) {
+                stepId = position;
+                setStepTitle(position);
 
-                @Override
-                public void onPageScrollStateChanged(int state) {
+            }
 
-                }
-            });
+            @Override
+            public void onPageScrollStateChanged(int state) {
 
-            fragmentStepBinding.stepTabLayout.setupWithViewPager(fragmentStepBinding.stepViewPager);
+            }
+        });
+
+        if (!mTwoPane) {
+            setStepTitle(stepId);
         }
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE && !mTwoPane) {
+
+        }
+        fragmentStepBinding.stepTabLayout.setupWithViewPager(fragmentStepBinding.stepViewPager);
+    }
 
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt(STEP_ID, stepId);
         super.onSaveInstanceState(outState);
+    }
+
+    private void setStepTitle(int position) {
+        if (!mTwoPane) {
+            getActivity().setTitle(steps.get(position).getShortDescription());
+        }
     }
 }

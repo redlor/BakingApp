@@ -15,6 +15,10 @@ import it.redlor.bakingapp.databinding.StepItemBinding;
 import it.redlor.bakingapp.pojos.Step;
 import it.redlor.bakingapp.ui.callbacks.StepClickCallback;
 
+/**
+ * RecyclerView Adapter for the list of steps
+ */
+
 public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepViewHolder> {
 
     private StepClickCallback stepClickCallback;
@@ -35,7 +39,7 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepViewHold
 
     @Override
     public void onBindViewHolder(@NonNull StepViewHolder holder, int position) {
-            holder.bind(stepList.get(position), stepClickCallback);
+        holder.bind(stepList.get(position), stepClickCallback);
     }
 
     @Override

@@ -15,6 +15,8 @@ import it.redlor.bakingapp.BakingApp;
 public class AppModule {
 
     @Provides
-    Application provideContext(BakingApp application) {return application;}
+    Application provideContext(BakingApp application) {
+        return application;
+    }
 
 }

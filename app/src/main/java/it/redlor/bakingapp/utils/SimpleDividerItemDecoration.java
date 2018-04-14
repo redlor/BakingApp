@@ -9,6 +9,9 @@ import android.view.View;
 
 import it.redlor.bakingapp.R;
 
+/**
+ * Item divider for the RecyclerView
+ */
 public class SimpleDividerItemDecoration extends RecyclerView.ItemDecoration {
 
     private Drawable mDivider;

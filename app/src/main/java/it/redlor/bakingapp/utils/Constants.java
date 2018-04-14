@@ -9,5 +9,6 @@ public class Constants {
     public static final String DESCRIPTION = "description_id";
     public static final String VIDEO_URL = "video_url";
     public static final String IMAGE_URL = "image_url";
-    public static final String INGREDIENTS = "ingredients";
+    public static final String VIDEO = "video";
+
 }
