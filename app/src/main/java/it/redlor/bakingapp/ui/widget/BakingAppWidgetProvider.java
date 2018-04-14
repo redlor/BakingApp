@@ -33,13 +33,16 @@ public class BakingAppWidgetProvider extends AppWidgetProvider {
             if (recipe != null) {
                 views.setTextViewText(R.id.widget_title_text_view, recipe.getName());
                 views.setTextViewText(R.id.widget_ingredients_text_view, getIngredients(recipe));
+            } else {
+                views.setTextViewText(R.id.widget_title_text_view,  context.getResources().getString(R.string.no_clicked_recipe));
             }
         // Set the intent when the widget is clicked
-             Intent intent = new Intent(context, DetailsActivity.class);
+        if (recipe != null) {
+            Intent intent = new Intent(context, DetailsActivity.class);
             intent.putExtra(CLICKED_RECIPE, recipe);
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-           views.setOnClickPendingIntent(R.id.widget_layout, pendingIntent);
-
+            views.setOnClickPendingIntent(R.id.widget_layout, pendingIntent);
+        }
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);

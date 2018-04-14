@@ -13,19 +13,26 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.MainActivity">
+
+        <activity
+            android:name="it.redlor.bakingapp.ui.SplashScreenActivity"
+            android:theme="@style/SplashTheme">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".ui.MainActivity">
+        </activity>
         <activity
             android:name=".ui.DetailsActivity"
-            android:parentActivityName=".ui.MainActivity"></activity>
+            android:parentActivityName=".ui.MainActivity"/>
         <activity
             android:name=".ui.StepActivity"
-            android:parentActivityName=".ui.DetailsActivity"></activity>
+            android:parentActivityName=".ui.DetailsActivity"/>
 
         <receiver android:name=".ui.widget.BakingAppWidgetProvider">
             <intent-filter>
