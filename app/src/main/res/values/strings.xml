@@ -4,4 +4,13 @@
     <!-- Empty state -->
     <string name="no_internet">No Internet connection</string>
 
+    <!-- DetailsActivity -->
+    <string name="ingredients">Ingredients:</string>
+
+    <!-- Steps -->
+    <string name="step">STEP</string>
+
+    <!-- Widget -->
+    <string name="no_clicked_recipe">Select a recipe</string>
+
 </resources>

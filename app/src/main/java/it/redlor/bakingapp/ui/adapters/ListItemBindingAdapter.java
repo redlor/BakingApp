@@ -8,6 +8,10 @@ import com.squareup.picasso.Picasso;
 
 import it.redlor.bakingapp.R;
 
+/**
+ * Adapter to bind the image
+ */
+
 public class ListItemBindingAdapter {
 
     @BindingAdapter({"image"})
