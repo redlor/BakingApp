@@ -16,3 +16,4 @@ I use Architecture components to create the app:
 - Dagger 2
 - ViewModel
 - Data Binding
+- RxJava with Retrofit 2
